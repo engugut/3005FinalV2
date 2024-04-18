@@ -50,29 +50,30 @@ def updateUser(user_id, weight, fitness_goals, weight_goal, time_goal, health_me
     #print(cursor.fetchall())
 
 def getUserExercices(user_id):
-    cursor.execute(""" SELECT * FROM exercices WHERE user_id = %s""", (user_id))
+    cursor.execute(""" SELECT * FROM exercices WHERE user_id = %s""", (user_id,))
     conn.commit()
     print(cursor.fetchall())
 
 def getMember(name):
-    cursor.execute(""" SELECT * FROM users WHERE name = %s""", (name))
+    cursor.execute(""" SELECT * FROM users WHERE name = %s""", (name,))
     conn.commit()
     print(cursor.fetchall())
     
 def updateRoomNumber(user_id, trainer_id, room_number):
     cursor.execute(""" UPDATE userschedule SET room_number = %s WHERE user_id = %s""", (room_number,user_id))
     cursor.execute(""" UPDATE trainerschedule SET room_number = %s WHERE trainer_id = %s""", (room_number,trainer_id))
-    cursor.execute(""" UPDATE rooms SET available = false WHERE room_number = %s""", (room_number))
+    cursor.execute(""" UPDATE rooms SET available = false WHERE room_number = %s""", (room_number,))
     conn.commit()
     #print(cursor.fetchall())
     
 def checkEquipment(equipment_id):
-    cursor.execute(""" UPDATE equipment SET needs_maintenance = false WHERE equipment_id = %s""", (equipment_id))
+    cursor.execute(""" UPDATE equipment SET needs_maintenance = false WHERE equipment_id = %s""", (equipment_id,))
     conn.commit()
     #print(cursor.fetchall())
     
 def addClassSche(trainer_id, app_time_start, app_time_end, day_available, room_number):
-    cursor.execute('''INSERT INTO userschedule (trainer_id, user_id, app_time_start, app_time_end, day_available, room_number) VALUES(%s,ARRAY[1,2,3],%s,%s,%s,%s)''', (user_id,app_time_start,app_time_end,day_available,room_number))
+    cursor.execute('''INSERT INTO classschedule (trainer_id, user_id, app_time_start, app_time_end, day_available, room_number) VALUES(%s,ARRAY[1,2,3],%s,%s,%s,%s)''', (trainer_id,app_time_start,app_time_end,day_available,room_number))
+    cursor.execute(""" UPDATE rooms SET available = false WHERE room_number = %s""", (room_number,))
     conn.commit()
     #print(cursor.fetchall())
     
@@ -113,7 +114,7 @@ if __name__ == '__main__':
 				Uid = input("Please enter your ID ")
 				getUserExercices(Uid)
 				os.execl(sys.executable, '"{}"'.format(sys.executable), *sys.argv)
-		    if userselectexist == '3':
+			if userselectexist == '3':
 				getTrainerSche()
 				Uid = input("Please enter your ID ")
 				time_start = input("Please enter your starting time (24-hour format) ")
@@ -152,7 +153,7 @@ if __name__ == '__main__':
 			r_n = input("Please enter the room number")
 			addClassSche(Tid, time_start, str(int(time_start[:2]) + 2)+":00:00", day, r_n)
 			os.execl(sys.executable, '"{}"'.format(sys.executable), *sys.argv)
-		if userselectexist == '3':
+		if userselectexist == '4':
 			Uid = input("Please enter the User's ID ")
 			c_n = input("Please enterthe Card Number ")
 			e_d = input("Please enter the expiry date (1999-01-01 format) ")
